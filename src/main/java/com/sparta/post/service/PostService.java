@@ -37,7 +37,7 @@ public class PostService {
 
     public Long updatePost(Long id, PostRequestDto requestDto) {
         // 해당 메모가 DB에 존재하는지 확인
-        Post post = findMemo(id);
+        Post post = findPost(id);
 
         // post 내용 수정
         post.update(requestDto);
@@ -48,14 +48,14 @@ public class PostService {
     @Transactional
     public Long deletePost(Long id) {
         // 해당 메모가 DB에 존재하는지 확인
-        Post post = findMemo(id);
+        Post post = findPost(id);
 
         // post 삭제
         postRepository.delete(post);
         return id;
     }
 
-    private Post findMemo(Long id) {
+    private Post findPost(Long id) {
         return postRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("선택한 메모는 존재하지 않습니다.")
         );
