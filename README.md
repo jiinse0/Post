@@ -1,6 +1,6 @@
 유스 케이스
 
-<img width="421" alt="image" src="https://github.com/jiinse0/Post/assets/130745679/3f53d492-4398-4323-b558-e7019bfd8839">
+<img width="738" alt="image" src="https://github.com/jiinse0/Post/assets/130745679/2323ba63-ebdb-4b3f-b4ce-38fb354d3857">
 
 
 요구 사항
