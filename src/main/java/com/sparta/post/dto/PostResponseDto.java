@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 public class PostResponseDto {
+    private Long id;
     private String title;
     private String username;
     private String content;
@@ -16,6 +17,7 @@ public class PostResponseDto {
     private LocalDateTime modifiedAt;
 
     public PostResponseDto(Post post) {
+        this.id = post.getId();
         this.username = post.getUsername();
         this.title = post.getTitle();
         this.content = post.getContent();
@@ -23,4 +25,6 @@ public class PostResponseDto {
         this.createdAt = post.getCreatedAt();
         this.modifiedAt = post.getModifiedAt();
     }
+
+
 }

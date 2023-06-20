@@ -2,6 +2,7 @@ package com.sparta.post.controller;
 
 import com.sparta.post.dto.PostRequestDto;
 import com.sparta.post.dto.PostResponseDto;
+import com.sparta.post.entity.Post;
 import com.sparta.post.service.PostService;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,15 +17,20 @@ public class PostController {
         this.postService = postService;
     }
 
+    @GetMapping("/post")
+    public List<PostResponseDto> getPosts() {
+        return postService.getPosts();
+    }
+
+    @GetMapping("/post/{id}")
+    public Post findPost(@PathVariable Long id) {
+        return postService.findPost(id);
+    }
+
     @PostMapping("/post")
     public PostResponseDto createPost(@RequestBody PostRequestDto requestDto) {
 
         return postService.createPost(requestDto);
-    }
-
-    @GetMapping("/post")
-    public List<PostResponseDto> getPosts() {
-        return postService.getPosts();
     }
 
     @PutMapping("/post/{id}")
@@ -32,8 +38,8 @@ public class PostController {
         return postService.updatePost(id, requestDto);
     }
 
-    @DeleteMapping("/post/{id}")
-    public Long deletePost(@PathVariable Long id) {
-        return postService.deletePost(id);
+    @DeleteMapping("/post/{id}/{password}")
+    public Long deletePost(@PathVariable Long id, @PathVariable String password) {
+        return postService.deletePost(id, password);
     }
 }
