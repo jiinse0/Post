@@ -17,8 +17,7 @@ public class PostService {
         this.postRepository = postRepository;
     }
 
-    public List<PostResponseDto> getPosts() {
-        // DB 조회
+    public List<PostResponseDto> getPost() {
         return postRepository.findAllByOrderByModifiedAtDesc()
                 .stream()
                 .map(PostResponseDto::new)
@@ -26,49 +25,50 @@ public class PostService {
     }
 
     public PostResponseDto createPost(PostRequestDto requestDto) {
-        // RequestDto -> Entity
         Post post = new Post(requestDto);
 
-        // DB 저장
         Post savePost = postRepository.save(post);
 
-        // Entity -> ResponseDto
         PostResponseDto postResponseDto = new PostResponseDto(post);
 
         return postResponseDto;
     }
 
-    @Transactional
-    public Long updatePost(Long id, PostRequestDto requestDto) {
-        // 해당 메모가 DB에 존재하는지 확인
+    public Long selectPost(Long id, PostRequestDto requestDto) {
+
         Post post = findPost(id);
 
-        if (post.getPassword().equals(requestDto.getPassword())) {
-            // post 내용 수정
-            post.update(requestDto);
-        } else {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
+        post.selectPost(requestDto);
 
         return id;
     }
 
     @Transactional
-    public Long deletePost(Long id, String password) {
-        // 해당 메모가 DB에 존재하는지 확인
+    public PostResponseDto updatePost(Long id, PostRequestDto requestDto) {
         Post post = findPost(id);
 
-        if (post.getPassword().equals(password)) {
-            // post 삭제
+        if (post.checkPassword(requestDto.getPassword())) {
+            post.update(requestDto);
+        } else {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+        return new PostResponseDto(post);
+    }
+
+    @Transactional
+    public String deletePost(Long id, String password) {
+        Post post = findPost(id);
+
+        if (post.checkPassword(password)) {
             postRepository.delete(post);
         } else {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        return id;
+        return "삭제가 완료 되었습니다.";
     }
 
-    public Post findPost(Long id) {
+    private Post findPost(Long id) {
         return postRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("선택한 게시글은 존재하지 않습니다.")
         );
