@@ -18,28 +18,22 @@ public class PostController {
     }
 
     @GetMapping("/post")
-    public List<PostResponseDto> getPosts() {
-        return postService.getPosts();
+    public List<PostResponseDto> getPost() {
+        return postService.getPost();
     }
 
-    @GetMapping("/post/{id}")
-    public Post findPost(@PathVariable Long id) {
-        return postService.findPost(id);
+    @PutMapping("/post/{id}")
+    public PostResponseDto updatePost(@PathVariable Long id, @RequestBody PostRequestDto requestDto) {
+        return postService.updatePost(id, requestDto);
     }
 
     @PostMapping("/post")
     public PostResponseDto createPost(@RequestBody PostRequestDto requestDto) {
-
         return postService.createPost(requestDto);
     }
 
-    @PutMapping("/post/{id}")
-    public Long updatePost(@PathVariable Long id, @RequestBody PostRequestDto requestDto) {
-        return postService.updatePost(id, requestDto);
-    }
-
     @DeleteMapping("/post/{id}/{password}")
-    public Long deletePost(@PathVariable Long id, @PathVariable String password) {
+    public String deletePost(@PathVariable Long id, @PathVariable String password) {
         return postService.deletePost(id, password);
     }
 }
