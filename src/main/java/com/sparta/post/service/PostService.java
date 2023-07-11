@@ -4,73 +4,58 @@ import com.sparta.post.dto.PostRequestDto;
 import com.sparta.post.dto.PostResponseDto;
 import com.sparta.post.entity.Post;
 import com.sparta.post.repository.PostRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class PostService {
-    private final PostRepository postRepository;
+    private final PostRepository repository;
 
-    public PostService(PostRepository postRepository) {
-        this.postRepository = postRepository;
+    public PostResponseDto creatPost(PostRequestDto requestDto) {
+        // RequestDto -> Entity
+        Post post = new Post(requestDto);
+
+        // DB 저장
+        repository.save(post);
+
+        return new PostResponseDto(post);
+    }
+
+    public PostResponseDto getOnePost(Long id) {
+        Post post = findById(id);
+
+        return new PostResponseDto(post);
     }
 
     public List<PostResponseDto> getPost() {
-        return postRepository.findAllByOrderByModifiedAtDesc()
-                .stream()
+        return repository.findAllByOrderByModifiedAtDesc().stream()
                 .map(PostResponseDto::new)
                 .toList();
     }
 
-    public PostResponseDto createPost(PostRequestDto requestDto) {
-        Post post = new Post(requestDto);
-
-        Post savePost = postRepository.save(post);
-
-        PostResponseDto postResponseDto = new PostResponseDto(post);
-
-        return postResponseDto;
-    }
-
-    public Long selectPost(Long id, PostRequestDto requestDto) {
-
-        Post post = findPost(id);
-
-        post.selectPost(requestDto);
-
-        return id;
-    }
-
-    @Transactional
     public PostResponseDto updatePost(Long id, PostRequestDto requestDto) {
-        Post post = findPost(id);
+        Post post = findById(id);
 
-        if (post.checkPassword(requestDto.getPassword())) {
-            post.update(requestDto);
-        } else {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
+        post.update(requestDto);
+
         return new PostResponseDto(post);
     }
 
-    @Transactional
-    public String deletePost(Long id, String password) {
-        Post post = findPost(id);
+    public String deletePost(Long id, PostRequestDto requestDto) {
+        Post post = findById(id);
 
-        if (post.checkPassword(password)) {
-            postRepository.delete(post);
-        } else {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
+        repository.delete(post);
 
-        return "삭제가 완료 되었습니다.";
+        return "삭제가 완료되었습니다.";
     }
 
-    private Post findPost(Long id) {
-        return postRepository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("선택한 게시글은 존재하지 않습니다.")
+    private Post findById(Long id) {
+        return repository.findById(id).orElseThrow(() ->
+                new IllegalArgumentException("게시글을 찾을 수 없습니다.")
         );
     }
 }
