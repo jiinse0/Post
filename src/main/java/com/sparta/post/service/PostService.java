@@ -5,7 +5,6 @@ import com.sparta.post.dto.PostResponseDto;
 import com.sparta.post.entity.Post;
 import com.sparta.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,7 +39,11 @@ public class PostService {
     public PostResponseDto updatePost(Long id, PostRequestDto requestDto) {
         Post post = findById(id);
 
-        post.update(requestDto);
+        if (post.getPassword().equals(requestDto.getPassword())) {
+            post.update(requestDto);
+        } else {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
 
         return new PostResponseDto(post);
     }
@@ -48,7 +51,11 @@ public class PostService {
     public String deletePost(Long id, PostRequestDto requestDto) {
         Post post = findById(id);
 
-        repository.delete(post);
+        if (post.getPassword().equals(requestDto.getPassword())) {
+            repository.delete(post);
+        } else {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
 
         return "삭제가 완료되었습니다.";
     }
