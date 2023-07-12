@@ -14,7 +14,7 @@ import java.util.List;
 public class PostService {
     private final PostRepository repository;
 
-    public PostResponseDto creatPost(PostRequestDto requestDto) {
+    public PostResponseDto createPost(PostRequestDto requestDto) {
         // RequestDto -> Entity
         Post post = new Post(requestDto);
 

@@ -16,8 +16,8 @@ public class PostController {
 
     // 게시글 생성
     @PostMapping("/post")
-    public PostResponseDto creatPost(@RequestBody PostRequestDto requestDto) {
-        return service.creatPost(requestDto);
+    public PostResponseDto createPost(@RequestBody PostRequestDto requestDto) {
+        return service.createPost(requestDto);
     }
 
     // 게시글 선택 조회
