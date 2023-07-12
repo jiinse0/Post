@@ -6,6 +6,7 @@ import com.sparta.post.entity.Post;
 import com.sparta.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -36,6 +37,7 @@ public class PostService {
                 .toList();
     }
 
+    @Transactional
     public PostResponseDto updatePost(Long id, PostRequestDto requestDto) {
         Post post = findById(id);
 
